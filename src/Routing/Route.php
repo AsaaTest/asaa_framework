@@ -2,6 +2,8 @@
 
 namespace Asaa\Routing;
 
+use Closure;
+
 class Route
 {
     protected string $uri; // La URI de la ruta.
@@ -84,5 +86,10 @@ class Route
 
         // Combina los nombres de los parámetros con los valores extraídos y devuelve un arreglo asociativo.
         return array_combine($this->parameters, array_slice($arguments, 1));
+    }
+
+    public static function get(string $uri, Closure $action)
+    {
+
     }
 }
