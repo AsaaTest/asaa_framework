@@ -1,0 +1,28 @@
+{
+    "name": "abelacosta/asaa-framework",
+    "description": "Simple Php Framework",
+    "autoload": {
+        "psr-4": {
+            "Asaa\\": "src/"
+        }
+    },
+    "scripts": {
+        "tests": "phpunit --color=always --testdox -v  tests/",
+        "php-cs-fixer": "php-cs-fixer fix src/ --diff"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Asaa\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Abel Acosta",
+            "email": "abel.2833@hotmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "friendsofphp/php-cs-fixer": "^3.22"
+    }
+}
