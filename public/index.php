@@ -18,14 +18,14 @@ $router = new Router;
  * Define las rutas y sus acciones correspondientes utilizando los métodos "get" y "post" del enrutador.
  * Estas acciones son funciones anónimas (closures) que se ejecutarán cuando la ruta coincida con la solicitud.
  */
-$router->get('/test', function (Request $request) {
+$router->get('/test/{param}', function (Request $request) {
     // Retorna una respuesta de texto con el mensaje "GET OK".
-    return Response::text("GET OK");
+    return Response::json($request->routeParameters());
 });
 
 $router->post('/test', function (Request $request) {    
     // Retorna una respuesta de texto con el mensaje "POST OK".
-    return Response::text("POST OK");
+    return Response::json($request->query('test'));
 });
 
 $router->get('/redirect', function (Request $request) {    
@@ -39,9 +39,9 @@ $server = new PhpNativeServer();
 try {
     // Intenta resolver la ruta utilizando la URI y el método HTTP de la solicitud actual ($_SERVER["REQUEST_URI"] y $_SERVER["REQUEST_METHOD"]).
     // Crea una instancia de la clase Request utilizando la implementación de PhpNativeServer, que obtiene información de la solicitud HTTP utilizando variables superglobales de PHP.
-    $request = new Request($server);
+    $request = $server->getRequest();
     $route = $router->resolve($request);
-
+    $request->setRoute($route);
     // Obtiene la acción asociada a la ruta resuelta.
     $action = $route->action();
 

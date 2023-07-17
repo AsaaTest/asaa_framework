@@ -1,6 +1,7 @@
 <?php
 
 // Define el espacio de nombres para las clases de pruebas del enrutador.
+
 namespace Asaa\Tests\Routing;
 
 // Importa las clases necesarias para las pruebas.
@@ -13,20 +14,22 @@ use PHPUnit\Framework\TestCase;
 // Clase de pruebas para el enrutador (Router).
 class RouterTest extends TestCase
 {
-    // Función auxiliar para crear una instancia simulada de solicitud (MockRequest).
-    // Esta función toma una URI y un método HTTP y devuelve una instancia de Request con un servidor simulado (MockServer).
+    /**
+     * Crea una instancia de la clase Request simulando una solicitud HTTP con una URI y un método HTTP específicos.
+     *
+     * @param string $uri La URI de la solicitud.
+     * @param string $method El método HTTP de la solicitud (por ejemplo, GET, POST, PUT, etc.).
+     * @return Request Una instancia de la clase Request simulando la solicitud HTTP.
+     */
     private function createMockRequest(string $uri, string $method): Request
     {
-        // Crea una instancia simulada de Server utilizando PHPUnit's getMock().
-        $mock = $this->getMockBuilder(Server::class)->getMock();
-        
-        // Configura el comportamiento simulado de los métodos de Server para devolver la URI y el método HTTP proporcionados.
-        $mock->method('requestUri')->willReturn($uri);
-        $mock->method('requestMethod')->willReturn($method);
-
-        // Crea una instancia de Request utilizando el servidor simulado.
-        return new Request($mock);
+        // Crea una nueva instancia de la clase Request y establece la URI y el método HTTP utilizando los parámetros recibidos.
+        // Luego, devuelve la instancia de Request creada para su uso en las pruebas.
+        return (new Request())
+            ->setUri($uri)
+            ->setMethod($method);
     }
+
 
     /**
      * Prueba para resolver una ruta básica con una acción de devolución de llamada.

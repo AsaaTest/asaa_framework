@@ -4,39 +4,21 @@
 
 namespace Asaa\Server;
 
-// Importa la clase de respuesta (Response) del espacio de nombres Asaa\Http.
+// Importa la clase de solicitud (Request) y respuesta (Response) del espacio de nombres Asaa\Http.
+use Asaa\Http\Request;
 use Asaa\Http\Response;
 
-// Interfaz Server que define los métodos para obtener información de una solicitud HTTP.
+/**
+ * Interfaz Server que define los métodos para obtener información de una solicitud HTTP y enviar respuestas al cliente.
+ */
 interface Server
 {
     /**
-     * Obtiene la URI (Uniform Resource Identifier) de la solicitud actual.
+     * Obtiene la solicitud (Request) del cliente.
      *
-     * @return string URI de la solicitud actual.
+     * @return Request La solicitud (Request) del cliente.
      */
-    public function requestUri(): string;
-
-    /**
-     * Obtiene el método HTTP de la solicitud actual.
-     *
-     * @return string Método HTTP de la solicitud actual (por ejemplo, GET, POST, PUT, etc.).
-     */
-    public function requestMethod(): string;
-
-    /**
-     * Obtiene los datos enviados en la solicitud actual (en caso de una solicitud POST).
-     *
-     * @return array Datos enviados en la solicitud actual.
-     */
-    public function postData(): array;
-
-    /**
-     * Obtiene los parámetros de la consulta (query parameters) de la solicitud actual.
-     *
-     * @return array Parámetros de la consulta de la solicitud actual.
-     */
-    public function queryParams(): array;
+    public function getRequest(): Request;
 
     /**
      * Envía la respuesta (Response) al cliente.

@@ -2,7 +2,6 @@
 
 namespace Asaa\Tests\Routing;
 
-
 use Asaa\Routing\Route;
 use PHPUnit\Framework\TestCase;
 

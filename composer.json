@@ -8,7 +8,8 @@
     },
     "scripts": {
         "tests": "phpunit --color=always --testdox -v  tests/",
-        "php-cs-fixer": "php-cs-fixer fix src/ --diff"
+        "fixer-src": "php-cs-fixer fix src/",
+        "fixer-tests": "php-cs-fixer fix tests/"
     },
     "autoload-dev": {
         "psr-4": {

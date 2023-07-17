@@ -4,63 +4,137 @@
 
 namespace Asaa\Http;
 
-use Asaa\Server\Server;
+use Asaa\Routing\Route;
 
-// Clase Request que representa una solicitud HTTP.
+/**
+ * Clase Request que representa una solicitud HTTP.
+ * Esta clase almacena información relevante sobre la solicitud realizada al servidor, como la URI, el método HTTP, los datos enviados y los parámetros de consulta.
+ */
 class Request
 {
-    // Propiedades de la clase para almacenar la URI, el método HTTP, los datos enviados y los parámetros de consulta.
-    protected string $uri;
-    protected string $method;
-    protected array $data;
-    protected array $query;
+    protected string $uri; // La URI de la solicitud.
+    protected Route $route; // Ruta coincidente con la URI.
+    protected string $method; // Método HTTP utilizado para esta solicitud.
+    protected array $data; // Datos enviados en la solicitud (para solicitudes POST).
+    protected array $query; // Parámetros de la consulta (query parameters).
 
     /**
-     * Constructor de la clase Request.
-     * Recibe un objeto que implementa la interfaz Server como parámetro.
-     * Utiliza dicho objeto para obtener la información de la solicitud HTTP y almacenarla en las propiedades de la clase.
+     * Obtiene la URI de la solicitud.
      *
-     * @param Server $server Objeto que implementa la interfaz Server.
-     */
-    public function __construct(Server $server)
-    {
-        // Obtiene la URI, el método HTTP, los datos enviados y los parámetros de consulta utilizando el objeto Server recibido.
-        // Luego, los almacena en las propiedades de la clase para su uso posterior.
-        $this->uri = $server->requestUri();
-        $this->method = $server->requestMethod();
-        $this->data = $server->postData();
-        $this->query = $server->queryParams();
-    }
-
-    /**
-     * Obtiene la URI de la solicitud HTTP.
-     *
-     * @return string URI de la solicitud HTTP.
+     * @return string La URI de la solicitud.
      */
     public function uri(): string
     {
-        // Retorna el valor de la propiedad $uri, que contiene la URI de la solicitud HTTP.
         return $this->uri;
     }
 
     /**
-     * Obtiene el método HTTP de la solicitud HTTP.
+     * Establece la URI de la solicitud.
      *
-     * @return string Método HTTP de la solicitud HTTP (por ejemplo, GET, POST, PUT, etc.).
+     * @param string $uri La URI a establecer.
+     * @return self
+     */
+    public function setUri(string $uri): self
+    {
+        $this->uri = $uri;
+        return $this;
+    }
+
+    /**
+     * Obtiene la ruta coincidente con la URI de esta solicitud.
+     *
+     * @return Route La ruta coincidente con la URI de esta solicitud.
+     */
+    public function route(): Route
+    {
+        return $this->route;
+    }
+
+    /**
+     * Establece la ruta para esta solicitud.
+     *
+     * @param Route $route La ruta a establecer.
+     * @return self
+     */
+    public function setRoute(Route $route): self
+    {
+        $this->route = $route;
+        return $this;
+    }
+
+    /**
+     * Obtiene el método HTTP de la solicitud.
+     *
+     * @return string El método HTTP de la solicitud.
      */
     public function method(): string
     {
-        // Retorna el valor de la propiedad $method, que contiene el método HTTP de la solicitud HTTP.
         return $this->method;
     }
 
+    /**
+     * Establece el método HTTP de la solicitud.
+     *
+     * @param string $method El método HTTP a establecer.
+     * @return self
+     */
+    public function setMethod(string $method): self
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
+     * Obtiene los datos enviados en la solicitud (para solicitudes POST).
+     *
+     * @return array Los datos enviados en la solicitud.
+     */
     public function data(): array
     {
         return $this->data;
     }
 
+    /**
+     * Establece los datos enviados en la solicitud (para solicitudes POST).
+     *
+     * @param array $data Los datos a establecer en la solicitud.
+     * @return self
+     */
+    public function setPostData(array $data): self
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Obtiene los parámetros de consulta (query parameters).
+     *
+     * @return array Los parámetros de consulta de la solicitud.
+     */
     public function query(): array
     {
         return $this->query;
+    }
+
+    /**
+     * Establece los parámetros de consulta (query parameters).
+     *
+     * @param array $query Los parámetros de consulta a establecer.
+     * @return self
+     */
+    public function setQueryParameters(array $query): self
+    {
+        $this->query = $query;
+        return $this;
+    }
+
+    /**
+     * Obtiene todos los parámetros de la ruta.
+     *
+     * @return array Un arreglo asociativo donde las claves son los nombres de los parámetros de la ruta y los valores son sus valores extraídos de la URI de la solicitud.
+     */
+    public function routeParameters(): array
+    {
+        return $this->route->parseParameters($this->uri);
     }
 }
