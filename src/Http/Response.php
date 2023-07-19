@@ -2,6 +2,9 @@
 
 namespace Asaa\Http;
 
+use Asaa\App;
+use Asaa\container\Container;
+
 /**
  * Clase Response que representa una respuesta HTTP.
  * Esta clase almacena información relevante sobre la respuesta que será enviada al cliente, como el código de estado HTTP, los encabezados y el contenido.
@@ -163,5 +166,13 @@ class Response
         return (new self())
             ->setStatus(302)
             ->setHeader("Location", $uri);
+    }
+
+    public static function view(string $viewName, array $params = [], $layout = null): self
+    {
+        $content = Container::resolve(App::class)->view->render($viewName, $params, $layout);
+        return (new self())
+            ->setContentType("text/html")
+            ->setContent($content);
     }
 }

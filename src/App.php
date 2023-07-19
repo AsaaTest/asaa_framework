@@ -2,11 +2,13 @@
 
 namespace Asaa;
 
-use Asaa\container\Container;
+use Asaa\View\View;
 use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Server\Server;
 use Asaa\Routing\Router;
+use Asaa\View\AsaaEngine;
+use Asaa\container\Container;
 use Asaa\Server\PhpNativeServer;
 use Asaa\Http\HttpNotFoundException;
 
@@ -36,6 +38,8 @@ class App
      */
     public Server $server;
 
+    public View $view;
+
 
     /**
      * Método estático para inicializar y configurar la aplicación.
@@ -55,6 +59,8 @@ class App
 
         // Obtiene la solicitud HTTP actual utilizando el servidor y la asigna a la propiedad $request de la aplicación.
         $app->request = $app->server->getRequest();
+
+        $app->view = new AsaaEngine(__DIR__."/../views");
 
         // Retorna la instancia de la aplicación configurada.
         return $app;
