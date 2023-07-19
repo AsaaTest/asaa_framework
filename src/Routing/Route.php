@@ -2,7 +2,6 @@
 
 namespace Asaa\Routing;
 
-
 use Asaa\App;
 use Asaa\container\Container;
 
@@ -12,7 +11,7 @@ class Route
     protected \Closure $action; // La acción asociada a la ruta.
     protected string $regex; // Expresión regular generada a partir de la URI para hacer coincidencias.
     protected array $parameters; // Lista de parámetros extraídos de la URI.
-    protected array $middlewares = []; 
+    protected array $middlewares = [];
 
     /**
      * Constructor de la clase Route.
@@ -54,7 +53,7 @@ class Route
         return $this->action;
     }
 
- 
+
     public function middlewares(): array
     {
         return $this->middlewares;
@@ -66,7 +65,8 @@ class Route
         return $this;
     }
 
-    public function hasMiddlewares(): bool {
+    public function hasMiddlewares(): bool
+    {
         return count($this->middlewares) > 0;
     }
 

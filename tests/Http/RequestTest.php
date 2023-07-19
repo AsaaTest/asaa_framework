@@ -26,7 +26,8 @@ class RequestTest extends TestCase
         $this->assertEquals('POST', $request->method());
     }
 
-    public function test_data_returns_value_if_key_is_given() {
+    public function test_data_returns_value_if_key_is_given()
+    {
         $data = ['test' => 5, 'foo' => 1, 'bar' => 2];
         $request = (new Request())->setPostData($data);
 
@@ -35,7 +36,8 @@ class RequestTest extends TestCase
         $this->assertNull($request->data("doesn't exist"));
     }
 
-    public function test_query_returns_value_if_key_is_given() {
+    public function test_query_returns_value_if_key_is_given()
+    {
         $data = ['test' => 5, 'foo' => 1, 'bar' => 2];
         $request = (new Request())->setQueryParameters($data);
 
@@ -44,7 +46,8 @@ class RequestTest extends TestCase
         $this->assertNull($request->query("doesn't exist"));
     }
 
-    public function test_route_parameters_returns_value_if_key_is_given() {
+    public function test_route_parameters_returns_value_if_key_is_given()
+    {
         $route = new Route('/test/{param}/foo/{bar}', fn () => "test");
         $request = (new Request())
             ->setRoute($route)

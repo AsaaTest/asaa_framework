@@ -40,7 +40,7 @@ class Response
      * @param string|null $key La clave del encabezado a obtener (opcional).
      * @return array|string|null Los encabezados de la respuesta o un encabezado específico si se proporciona la clave.
      */
-    public function headers(?string $key = null): array|string|null 
+    public function headers(?string $key = null): array|string|null
     {
         if (is_null($key)) {
             return $this->headers;

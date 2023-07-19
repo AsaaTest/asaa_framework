@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 // Clase de pruebas para el enrutador (Router).
 class RouterTest extends TestCase
 {
-    
     private function createMockRequest(string $uri, string $method): Request
     {
         // Crea una nueva instancia de la clase Request y establece la URI y el método HTTP utilizando los parámetros recibidos.
@@ -121,9 +120,11 @@ class RouterTest extends TestCase
         }
     }
 
-    public function test_run_middlewares() {
+    public function test_run_middlewares()
+    {
         $middleware1 = new class () {
-            public function handle(Request $request, \Closure $next): Response {
+            public function handle(Request $request, \Closure $next): Response
+            {
                 $response = $next($request);
                 $response->setHeader('x-test-one', 'one');
 
@@ -132,7 +133,8 @@ class RouterTest extends TestCase
         };
 
         $middleware2 = new class () {
-            public function handle(Request $request, \Closure $next): Response {
+            public function handle(Request $request, \Closure $next): Response
+            {
                 $response = $next($request);
                 $response->setHeader('x-test-two', 'two');
 
@@ -146,7 +148,7 @@ class RouterTest extends TestCase
         $router->get($uri, fn ($request) => $expectedResponse)
             ->setMiddlewares([$middleware1, $middleware2]);
 
-        $response = $router->resolve($this->createMockRequest($uri,'GET'));
+        $response = $router->resolve($this->createMockRequest($uri, 'GET'));
 
         $this->assertEquals($expectedResponse, $response);
         $this->assertEquals($response->headers('x-test-one'), 'one');

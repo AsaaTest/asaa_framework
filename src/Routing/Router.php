@@ -64,7 +64,8 @@ class Router
         return $action($request);
     }
 
-    protected function runMiddlewares(Request $request, array $middlewares, $target): Response {
+    protected function runMiddlewares(Request $request, array $middlewares, $target): Response
+    {
         if (count($middlewares) == 0) {
             return $target($request);
         }
@@ -151,5 +152,5 @@ class Router
         return $this->registerRoute('DELETE', $uri, $action);
     }
 
-    
+
 }

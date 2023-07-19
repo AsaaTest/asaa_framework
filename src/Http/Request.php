@@ -1,6 +1,7 @@
 <?php
 
 // Define el espacio de nombres para la clase Request.
+
 namespace Asaa\Http;
 
 use Asaa\Routing\Route;
@@ -91,7 +92,7 @@ class Request
      * @param string|null $key La clave del encabezado a obtener (opcional).
      * @return array|string|null Los encabezados de la solicitud o un encabezado específico si se proporciona la clave.
      */
-    public function headers(?string $key = null): array|string|null 
+    public function headers(?string $key = null): array|string|null
     {
         if (is_null($key)) {
             return $this->headers;
@@ -121,7 +122,7 @@ class Request
      * @param string|null $key La clave de los datos a obtener (opcional).
      * @return array|string|null Los datos enviados en la solicitud o un dato específico si se proporciona la clave.
      */
-    public function data(?string $key = null): array|string|null 
+    public function data(?string $key = null): array|string|null
     {
         if (is_null($key)) {
             return $this->data;
@@ -148,7 +149,7 @@ class Request
      * @param string|null $key La clave del parámetro a obtener (opcional).
      * @return array|string|null Los parámetros de consulta de la solicitud o un parámetro específico si se proporciona la clave.
      */
-    public function query(?string $key = null): array|string|null 
+    public function query(?string $key = null): array|string|null
     {
         if (is_null($key)) {
             return $this->query;
@@ -175,7 +176,7 @@ class Request
      * @param string|null $key La clave del parámetro de la ruta a obtener (opcional).
      * @return array|string|null Un arreglo asociativo donde las claves son los nombres de los parámetros de la ruta y los valores son sus valores extraídos de la URI de la solicitud, o un valor específico si se proporciona la clave.
      */
-    public function routeParameters(?string $key = null): array|string|null 
+    public function routeParameters(?string $key = null): array|string|null
     {
         $parameters = $this->route->parseParameters($this->uri);
 
