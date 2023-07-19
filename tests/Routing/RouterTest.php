@@ -6,21 +6,16 @@ namespace Asaa\Tests\Routing;
 
 // Importa las clases necesarias para las pruebas.
 
+
 use Asaa\Http\Request;
-use Asaa\Server\Server;
+use Asaa\Http\Response;
 use Asaa\Routing\Router;
 use PHPUnit\Framework\TestCase;
 
 // Clase de pruebas para el enrutador (Router).
 class RouterTest extends TestCase
 {
-    /**
-     * Crea una instancia de la clase Request simulando una solicitud HTTP con una URI y un método HTTP específicos.
-     *
-     * @param string $uri La URI de la solicitud.
-     * @param string $method El método HTTP de la solicitud (por ejemplo, GET, POST, PUT, etc.).
-     * @return Request Una instancia de la clase Request simulando la solicitud HTTP.
-     */
+    
     private function createMockRequest(string $uri, string $method): Request
     {
         // Crea una nueva instancia de la clase Request y establece la URI y el método HTTP utilizando los parámetros recibidos.
@@ -50,7 +45,7 @@ class RouterTest extends TestCase
         $router->get($uri, $action);
 
         // Resuelve la ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP (GET).
-        $route = $router->resolve($this->createMockRequest($uri, 'GET'));
+        $route = $router->resolveRoute($this->createMockRequest($uri, 'GET'));
 
         // Verifica que la ruta resuelta tenga la misma URI y acción que las registradas previamente.
         $this->assertEquals($uri, $route->uri());
@@ -80,7 +75,7 @@ class RouterTest extends TestCase
 
         // Resuelve cada ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP (GET).
         foreach ($routes as $uri => $action) {
-            $route = $router->resolve($this->createMockRequest($uri, 'GET'));
+            $route = $router->resolveRoute($this->createMockRequest($uri, 'GET'));
 
             // Verifica que cada ruta resuelta tenga la misma URI y acción que las registradas previamente.
             $this->assertEquals($uri, $route->uri());
@@ -118,11 +113,43 @@ class RouterTest extends TestCase
 
         // Resuelve cada ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP correspondiente.
         foreach ($routes as [$method, $uri, $action]) {
-            $route = $router->resolve($this->createMockRequest($uri, $method));
+            $route = $router->resolveRoute($this->createMockRequest($uri, $method));
 
             // Verifica que cada ruta resuelta tenga la misma URI y acción que las registradas previamente.
             $this->assertEquals($uri, $route->uri());
             $this->assertEquals($action, $route->action());
         }
+    }
+
+    public function test_run_middlewares() {
+        $middleware1 = new class () {
+            public function handle(Request $request, \Closure $next): Response {
+                $response = $next($request);
+                $response->setHeader('x-test-one', 'one');
+
+                return $response;
+            }
+        };
+
+        $middleware2 = new class () {
+            public function handle(Request $request, \Closure $next): Response {
+                $response = $next($request);
+                $response->setHeader('x-test-two', 'two');
+
+                return $response;
+            }
+        };
+
+        $router = new Router();
+        $uri = '/test';
+        $expectedResponse = Response::text("test");
+        $router->get($uri, fn ($request) => $expectedResponse)
+            ->setMiddlewares([$middleware1, $middleware2]);
+
+        $response = $router->resolve($this->createMockRequest($uri,'GET'));
+
+        $this->assertEquals($expectedResponse, $response);
+        $this->assertEquals($response->headers('x-test-one'), 'one');
+        $this->assertEquals($response->headers('x-test-two'), 'two');
     }
 }

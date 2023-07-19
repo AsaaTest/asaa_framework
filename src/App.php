@@ -68,23 +68,10 @@ class App
     public function run()
     {
         try {
-            // Intenta resolver la ruta utilizando el enrutador y la solicitud HTTP actual.
-            $route = $this->router->resolve($this->request);
-
-            // Asigna la ruta resuelta a la propiedad $route de la solicitud HTTP actual.
-            $this->request->setRoute($route);
-
-            // Obtiene la acción asociada a la ruta resuelta.
-            $action = $route->action();
-
-            // Ejecuta la acción pasando la solicitud HTTP actual como argumento y obtiene la respuesta.
-            $response = $action($this->request);
-
-            // Envía la respuesta al cliente utilizando el servidor.
+            $response = $this->router->resolve($this->request);
             $this->server->sendResponse($response);
         } catch (HttpNotFoundException $e) {
-            // Si no se encuentra ninguna ruta coincidente, muestra un mensaje de "Not Found" y establece el código de respuesta HTTP a 404.
-            $response = Response::text("Not Found")->setStatus(404);
+            $response = Response::text("Not found")->setStatus(404);
             $this->server->sendResponse($response);
         }
     }

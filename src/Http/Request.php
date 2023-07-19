@@ -1,7 +1,6 @@
 <?php
 
 // Define el espacio de nombres para la clase Request.
-
 namespace Asaa\Http;
 
 use Asaa\Routing\Route;
@@ -12,11 +11,13 @@ use Asaa\Routing\Route;
  */
 class Request
 {
+    // Propiedades de la clase Request.
     protected string $uri; // La URI de la solicitud.
     protected Route $route; // Ruta coincidente con la URI.
     protected string $method; // Método HTTP utilizado para esta solicitud.
     protected array $data; // Datos enviados en la solicitud (para solicitudes POST).
     protected array $query; // Parámetros de la consulta (query parameters).
+    protected array $headers = []; // Encabezados de la solicitud.
 
     /**
      * Obtiene la URI de la solicitud.
@@ -85,13 +86,48 @@ class Request
     }
 
     /**
+     * Obtiene los encabezados de la solicitud.
+     *
+     * @param string|null $key La clave del encabezado a obtener (opcional).
+     * @return array|string|null Los encabezados de la solicitud o un encabezado específico si se proporciona la clave.
+     */
+    public function headers(?string $key = null): array|string|null 
+    {
+        if (is_null($key)) {
+            return $this->headers;
+        }
+
+        return $this->headers[strtolower($key)] ?? null;
+    }
+
+    /**
+     * Establece los encabezados de la solicitud.
+     *
+     * @param array $headers Los encabezados a establecer.
+     * @return self
+     */
+    public function setHeaders(array $headers): self
+    {
+        foreach ($headers as $header => $value) {
+            $this->headers[strtolower($header)] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * Obtiene los datos enviados en la solicitud (para solicitudes POST).
      *
-     * @return array Los datos enviados en la solicitud.
+     * @param string|null $key La clave de los datos a obtener (opcional).
+     * @return array|string|null Los datos enviados en la solicitud o un dato específico si se proporciona la clave.
      */
-    public function data(): array
+    public function data(?string $key = null): array|string|null 
     {
-        return $this->data;
+        if (is_null($key)) {
+            return $this->data;
+        }
+
+        return $this->data[$key] ?? null;
     }
 
     /**
@@ -109,11 +145,16 @@ class Request
     /**
      * Obtiene los parámetros de consulta (query parameters).
      *
-     * @return array Los parámetros de consulta de la solicitud.
+     * @param string|null $key La clave del parámetro a obtener (opcional).
+     * @return array|string|null Los parámetros de consulta de la solicitud o un parámetro específico si se proporciona la clave.
      */
-    public function query(): array
+    public function query(?string $key = null): array|string|null 
     {
-        return $this->query;
+        if (is_null($key)) {
+            return $this->query;
+        }
+
+        return $this->query[$key] ?? null;
     }
 
     /**
@@ -131,10 +172,17 @@ class Request
     /**
      * Obtiene todos los parámetros de la ruta.
      *
-     * @return array Un arreglo asociativo donde las claves son los nombres de los parámetros de la ruta y los valores son sus valores extraídos de la URI de la solicitud.
+     * @param string|null $key La clave del parámetro de la ruta a obtener (opcional).
+     * @return array|string|null Un arreglo asociativo donde las claves son los nombres de los parámetros de la ruta y los valores son sus valores extraídos de la URI de la solicitud, o un valor específico si se proporciona la clave.
      */
-    public function routeParameters(): array
+    public function routeParameters(?string $key = null): array|string|null 
     {
-        return $this->route->parseParameters($this->uri);
+        $parameters = $this->route->parseParameters($this->uri);
+
+        if (is_null($key)) {
+            return $parameters;
+        }
+
+        return $parameters[$key] ?? null;
     }
 }

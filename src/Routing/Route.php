@@ -2,7 +2,9 @@
 
 namespace Asaa\Routing;
 
-use Closure;
+
+use Asaa\App;
+use Asaa\container\Container;
 
 class Route
 {
@@ -10,6 +12,7 @@ class Route
     protected \Closure $action; // La acción asociada a la ruta.
     protected string $regex; // Expresión regular generada a partir de la URI para hacer coincidencias.
     protected array $parameters; // Lista de parámetros extraídos de la URI.
+    protected array $middlewares = []; 
 
     /**
      * Constructor de la clase Route.
@@ -46,10 +49,27 @@ class Route
      *
      * @return \Closure La acción asociada a la ruta.
      */
-    public function action()
+    public function action(): \Closure
     {
         return $this->action;
     }
+
+ 
+    public function middlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    public function setMiddlewares(array $middlewares): self
+    {
+        $this->middlewares = array_map(fn ($middleware) => new $middleware(), $middlewares);
+        return $this;
+    }
+
+    public function hasMiddlewares(): bool {
+        return count($this->middlewares) > 0;
+    }
+
 
     /**
      * Comprueba si la URI dada coincide con la ruta.
@@ -88,8 +108,18 @@ class Route
         return array_combine($this->parameters, array_slice($arguments, 1));
     }
 
-    public static function get(string $uri, Closure $action)
+    /**
+     * Crea una nueva ruta para solicitudes HTTP GET y la agrega al enrutador.
+     *
+     * @param string $uri La URI de la ruta a crear.
+     * @param \Closure $action La acción o función que se ejecutará cuando se haga una solicitud a esta ruta.
+     * @return Route La instancia de la clase Route creada y agregada al enrutador.
+     */
+    public static function get(string $uri, \Closure $action): Route
     {
-
+        // Se utiliza el contenedor de dependencias (Container) para resolver la instancia de la clase App.
+        // Luego, se accede al enrutador (router) de la instancia de la clase App y se agrega la ruta HTTP GET.
+        return Container::resolve(App::class)->router->get($uri, $action);
     }
+
 }

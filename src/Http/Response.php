@@ -2,11 +2,15 @@
 
 namespace Asaa\Http;
 
+/**
+ * Clase Response que representa una respuesta HTTP.
+ * Esta clase almacena información relevante sobre la respuesta que será enviada al cliente, como el código de estado HTTP, los encabezados y el contenido.
+ */
 class Response
 {
-    protected int $status = 200;
-    protected array $headers = [];
-    protected ?string $content = null;
+    protected int $status = 200; // Código de estado HTTP predeterminado.
+    protected array $headers = []; // Encabezados de la respuesta.
+    protected ?string $content = null; // Contenido de la respuesta (puede ser nulo).
 
     /**
      * Obtiene el código de estado HTTP de la respuesta.
@@ -33,11 +37,16 @@ class Response
     /**
      * Obtiene los encabezados (headers) de la respuesta.
      *
-     * @return array Arreglo asociativo de encabezados (headers).
+     * @param string|null $key La clave del encabezado a obtener (opcional).
+     * @return array|string|null Los encabezados de la respuesta o un encabezado específico si se proporciona la clave.
      */
-    public function headers(): array
+    public function headers(?string $key = null): array|string|null 
     {
-        return $this->headers;
+        if (is_null($key)) {
+            return $this->headers;
+        }
+
+        return $this->headers[strtolower($key)] ?? null;
     }
 
     /**
