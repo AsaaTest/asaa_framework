@@ -49,7 +49,7 @@ class App
     public static function bootstrap(): App
     {
         // Obtiene o crea una instancia única de la clase App utilizando el contenedor de dependencias (Container).
-        $app = Container::singleton(self::class);
+        $app = singleton(self::class);
 
         // Crea una nueva instancia del enrutador (Router) y la asigna a la propiedad $router de la aplicación.
         $app->router = new Router();

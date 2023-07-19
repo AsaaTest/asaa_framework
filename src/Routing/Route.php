@@ -119,7 +119,7 @@ class Route
     {
         // Se utiliza el contenedor de dependencias (Container) para resolver la instancia de la clase App.
         // Luego, se accede al enrutador (router) de la instancia de la clase App y se agrega la ruta HTTP GET.
-        return Container::resolve(App::class)->router->get($uri, $action);
+        return app()->router->get($uri, $action);
     }
 
 }
