@@ -2,9 +2,6 @@
 
 namespace Asaa\Routing;
 
-use Asaa\App;
-use Asaa\container\Container;
-
 class Route
 {
     protected string $uri; // La URI de la ruta.

@@ -2,13 +2,10 @@
 
 namespace Asaa\Validation\Rules;
 
-class RequiredWhen
+class RequiredWhen implements ValidationRule
 {
-    public function __construct(
-        private string $otherField,
-        private string $operator,
-        private string $compareWith
-    ) {
+    public function __construct(private string $otherField, private string $operator, private string $compareWith)
+    {
         $this->otherField = $otherField;
         $this->operator = $operator;
         $this->compareWith = $compareWith;

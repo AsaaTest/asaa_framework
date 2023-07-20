@@ -6,6 +6,8 @@ use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Routing\Route;
 use Asaa\Http\Middleware;
+use Asaa\Validation\Rule;
+use Asaa\Validation\Rules\Required;
 
 // Incluye el archivo "vendor/autoload.php" para cargar las clases definidas por Composer (como el enrutador y otras dependencias).
 require_once "../vendor/autoload.php";
@@ -40,5 +42,17 @@ class AuthMiddleware implements Middleware {
 Route::get('/middlewares', fn (Request $request) => json(["message" => "ok"]))->setMiddlewares([AuthMiddleware::class]);
 
 Route::get('/html', fn (Request $request) => view('home', ["user" => "abel"]));
+
+Route::post('/validate', fn(Request $request) => json($request->validate([
+    'test' => Rule::required(),
+    'num' => Rule::number(),
+    'email' => [Rule::required(), Rule::email()]
+],
+[
+    'email' => [
+        Required::class => 'DAME EL 2CAMPO'
+    ]
+]
+)));
 
 $app->run();

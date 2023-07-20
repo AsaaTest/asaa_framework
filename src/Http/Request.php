@@ -5,6 +5,7 @@
 namespace Asaa\Http;
 
 use Asaa\Routing\Route;
+use Asaa\Validation\Validator;
 
 /**
  * Clase Request que representa una solicitud HTTP.
@@ -185,5 +186,12 @@ class Request
         }
 
         return $parameters[$key] ?? null;
+    }
+
+    public function validate(array $rules, array $messages = []): array
+    {
+        $validator = new Validator($this->data);
+
+        return $validator->validate($rules, $messages);
     }
 }
