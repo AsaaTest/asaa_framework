@@ -23,15 +23,18 @@ class Validator
             }
             $fieldUnderValidationErrors = [];
             foreach($rules as $rule) {
+                if(is_string($rule)) {
+                    $rule = Rule::from($rule);
+                }
                 if(!$rule->isValid($field, $this->data)) {
-                    $message = $messages[$field][$rule::class] ?? $rule->message();
-                    $fieldUnderValidationErrors[$rule::class] = $message;
+                    $message = $messages[$field][Rule::nameOf($rule)] ?? $rule->message();
+                    $fieldUnderValidationErrors[Rule::nameOf($rule)] = $message;
                 }
             }
-            if(count($fieldUnderValidationErrors) >0) {
+            if(count($fieldUnderValidationErrors) > 0) {
                 $errors[$field] = $fieldUnderValidationErrors;
             } else {
-                $validated[$field] = $this->data[$field];
+                $validated[$field] = $this->data[$field] ?? null;
             }
         }
         if(count($errors) > 0) {

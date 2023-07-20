@@ -12,6 +12,7 @@ use Asaa\container\Container;
 use Asaa\Server\PhpNativeServer;
 use Asaa\Http\HttpNotFoundException;
 use Asaa\Validation\Exceptions\ValidationException;
+use Asaa\Validation\Rule;
 use Throwable;
 
 /**
@@ -64,6 +65,8 @@ class App
 
         $app->view = new AsaaEngine(__DIR__."/../views");
 
+        Rule::loadDefaultRules();
+
         // Retorna la instancia de la aplicación configurada.
         return $app;
     }
@@ -84,10 +87,11 @@ class App
             $this->abort(json($e->errors())->setStatus(422));
         } catch(Throwable $e) {
             $response = json([
+                "error" => $e::class,
                 "message" => $e->getMessage(),
                 "trace" => $e->getTrace()
             ]);
-            $this->abort($response);
+            $this->abort($response->setStatus(500));
         }
     }
 

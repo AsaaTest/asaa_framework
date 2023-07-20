@@ -2,6 +2,8 @@
 
 namespace Asaa\Validation\Rules;
 
+use Asaa\Validation\Exceptions\RuleParseException;
+
 class RequiredWhen implements ValidationRule
 {
     public function __construct(private string $otherField, private string $operator, private string $compareWith)
@@ -28,6 +30,7 @@ class RequiredWhen implements ValidationRule
             "<" => $data[$this->otherField] < floatval($this->compareWith),
             ">=" => $data[$this->otherField] >= floatval($this->compareWith),
             "<=" => $data[$this->otherField] <= floatval($this->compareWith),
+            default => throw new RuleParseException("Unknow required_when operator: $this->operator")
         };
 
         return !$isRequired || isset($data[$field]) && $data[$field] != "";
