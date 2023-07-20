@@ -122,4 +122,18 @@ class Route
         return app()->router->get($uri, $action);
     }
 
+    /**
+     * Crea una nueva ruta para solicitudes HTTP GET y la agrega al enrutador.
+     *
+     * @param string $uri La URI de la ruta a crear.
+     * @param \Closure $action La acción o función que se ejecutará cuando se haga una solicitud a esta ruta.
+     * @return Route La instancia de la clase Route creada y agregada al enrutador.
+     */
+    public static function post(string $uri, \Closure $action): Route
+    {
+        // Se utiliza el contenedor de dependencias (Container) para resolver la instancia de la clase App.
+        // Luego, se accede al enrutador (router) de la instancia de la clase App y se agrega la ruta HTTP GET.
+        return app()->router->post($uri, $action);
+    }
+
 }

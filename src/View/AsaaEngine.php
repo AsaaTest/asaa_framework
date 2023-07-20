@@ -33,6 +33,9 @@ class AsaaEngine implements View
 
     protected function phpFileOutput(string $phpFile, array $params = []): string
     {
+        if(!file_exists($phpFile)) {
+            return "View $phpFile Not Found";
+        }
         foreach($params as $param => $value) {
             $$param = $value;
         }

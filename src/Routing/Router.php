@@ -69,7 +69,6 @@ class Router
         if (count($middlewares) == 0) {
             return $target($request);
         }
-
         return $middlewares[0]->handle(
             $request,
             fn ($request) => $this->runMiddlewares($request, array_slice($middlewares, 1), $target)

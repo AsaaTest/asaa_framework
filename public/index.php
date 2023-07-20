@@ -12,15 +12,15 @@ require_once "../vendor/autoload.php";
 
 $app = App::bootstrap();
 
-$app->router->get('/test/{param}', function (Request $request) {
+Route::get('/test/{param}', function (Request $request) {
     return json($request->routeParameters());
 });
 
-$app->router->post('/test', function (Request $request) {
-    return json($request->data('test'));
+Route::post('/test', function (Request $request) {
+    return json($request->data());
 });
 
-$app->router->get('/redirect', function (Request $request) {
+Route::get('/redirect', function (Request $request) {
     return redirect("/test");
 });
 
