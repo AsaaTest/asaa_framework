@@ -2,18 +2,19 @@
 
 namespace Asaa;
 
+use Throwable;
 use Asaa\View\View;
 use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Server\Server;
 use Asaa\Routing\Router;
+use Asaa\Session\Session;
+use Asaa\Validation\Rule;
 use Asaa\View\AsaaEngine;
-use Asaa\container\Container;
 use Asaa\Server\PhpNativeServer;
 use Asaa\Http\HttpNotFoundException;
+use Asaa\Session\PhpNativeSessionStorage;
 use Asaa\Validation\Exceptions\ValidationException;
-use Asaa\Validation\Rule;
-use Throwable;
 
 /**
  * Clase App que representa la aplicación web.
@@ -43,6 +44,8 @@ class App
 
     public View $view;
 
+    public Session $session;
+
 
     /**
      * Método estático para inicializar y configurar la aplicación.
@@ -64,6 +67,8 @@ class App
         $app->request = $app->server->getRequest();
 
         $app->view = new AsaaEngine(__DIR__."/../views");
+
+        $app->session = new Session(new PhpNativeSessionStorage());
 
         Rule::loadDefaultRules();
 
