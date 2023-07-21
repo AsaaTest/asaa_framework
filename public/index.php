@@ -45,8 +45,8 @@ Route::get('/html', fn (Request $request) => view('home', ["user" => "abel"]));
 
 Route::post('/validate', fn(Request $request) => json($request->validate([
     'test' => 'required',
-    'num' => 'number',
-    'email' => ['required_with:num', 'email']
+    'num' => 'required|number:',
+    'email' => 'required_with:num|email'
 ],
 [
     'email' => [
