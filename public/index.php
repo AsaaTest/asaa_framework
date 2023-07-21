@@ -56,8 +56,9 @@ Route::post('/validate', fn(Request $request) => json($request->validate([
 )));
 
 Route::get('/session', function (Request $request) {
-    session()->remove('test');
-    return json(["id" =>session()->id(), 'test' => session()->get('test', 'por def')]);
+    // session()->flash('alert2', 'success');
+    // return json(["id" =>session()->id(), 'test' => session()->get('test', 'por def')]);
+    return json($_SESSION);
 });
 
 $app->run();
