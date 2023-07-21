@@ -2,13 +2,14 @@
 
 namespace Asaa\Tests\Validation;
 
+use PHPUnit\Framework\TestCase;
 use Asaa\Validation\Rules\Email;
-use Asaa\Validation\Rules\LessThan;
 use Asaa\Validation\Rules\Number;
+use Asaa\Validation\Rules\LessThan;
 use Asaa\Validation\Rules\Required;
 use Asaa\Validation\Rules\RequiredWhen;
 use Asaa\Validation\Rules\RequiredWith;
-use PHPUnit\Framework\TestCase;
+use Asaa\Validation\Exceptions\RuleParseException;
 
 class ValidationRulesTest extends TestCase
 {
@@ -141,5 +142,13 @@ class ValidationRulesTest extends TestCase
     {
         $rule = new RequiredWhen($other, $operator, $compareWith);
         $this->assertEquals($expected, $rule->isValid($field, $data));
+    }
+
+    public function test_required_when_throws_parse_rule_exception_when_operator_is_invalid()
+    {
+        $rule = new RequiredWhen("other", "|||", "test");
+        $data = ["other" => 5, "test" => 1];
+        $this->expectException(RuleParseException::class);
+        $rule->isValid("test", $data);
     }
 }
