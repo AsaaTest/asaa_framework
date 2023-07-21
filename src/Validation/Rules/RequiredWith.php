@@ -13,7 +13,7 @@ class RequiredWith implements ValidationRule
 
     public function message(): string
     {
-        return "The :attribute field is required when :other {$this->withField} is :value.";
+        return "The field is required when  {$this->withField} is present";
     }
 
     public function isValid(string $field, array $data): bool

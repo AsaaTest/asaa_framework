@@ -6,7 +6,7 @@ class Email implements ValidationRule
 {
     public function message(): string
     {
-        return 'The :attribute must be a valid email address.';
+        return 'The field must be a valid email address.';
     }
 
     public function isValid(string $field, array $data): bool
