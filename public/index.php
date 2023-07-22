@@ -6,6 +6,7 @@ use Asaa\Database\DB;
 use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Routing\Route;
+use Asaa\Database\Model;
 use Asaa\Http\Middleware;
 use Asaa\Validation\Rule;
 use Asaa\Validation\Rules\Required;
@@ -75,7 +76,23 @@ Route::post('/user', function (Request $request){
     DB::statement("INSERT INTO users (name, email) VALUES (?,?)", [$request->data('name'), $request->data('email')]);
     return json(["message" => "Ok"]);
 });
+
 Route::get('/users', function (Request $request){
     return json(DB::statement("SELECT * FROM users"));
 });
+
+class User extends Model
+{
+    
+}
+
+Route::post('/user/model', function (Request $request){
+    $user = new User();
+    $user->name = $request->data('name');
+    $user->email = $request->data('email');
+    $user->save();
+    // return json($user->toArray());
+    return json(["message" => "Ok"]);
+});
+
 $app->run();

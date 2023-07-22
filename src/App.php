@@ -2,19 +2,20 @@
 
 namespace Asaa;
 
-use Asaa\Database\Drivers\DatabaseDriver;
-use Asaa\Database\Drivers\PdoDriver;
 use Throwable;
 use Asaa\View\View;
 use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Server\Server;
+use Asaa\Database\Model;
 use Asaa\Routing\Router;
 use Asaa\Session\Session;
 use Asaa\Validation\Rule;
 use Asaa\View\AsaaEngine;
 use Asaa\Server\PhpNativeServer;
+use Asaa\Database\Drivers\PdoDriver;
 use Asaa\Http\HttpNotFoundException;
+use Asaa\Database\Drivers\DatabaseDriver;
 use Asaa\Session\PhpNativeSessionStorage;
 use Asaa\Validation\Exceptions\ValidationException;
 
@@ -77,6 +78,8 @@ class App
         $app->database = new PdoDriver();
 
         $app->database->connect('mysql', 'localhost', 3306, 'proyecto_framework', 'root', '');
+
+        Model::setDatabaseDriver($app->database);
 
         Rule::loadDefaultRules();
 
