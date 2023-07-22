@@ -83,16 +83,34 @@ Route::get('/users', function (Request $request){
 
 class User extends Model
 {
-    
+    protected array $fillable = ['name', 'email'];
 }
 
 Route::post('/user/model', function (Request $request){
-    $user = new User();
+    // $user = new User();
+    // $user->name = $request->data('name');
+    // $user->email = $request->data('email');
+    // $user->save();
+    return json(User::create($request->data())->toArray());
+});
+
+Route::get('/user/query', function (Request $request){
+    return json(array_map(fn ($m) => $m->toArray(), User::where('name', 'mass')));
+});
+
+Route::post('/users/{id}/update', function (Request $request) {
+    $user = User::find($request->routeParameters('id'));
+
     $user->name = $request->data('name');
     $user->email = $request->data('email');
-    $user->save();
-    // return json($user->toArray());
-    return json(["message" => "Ok"]);
+    
+    return json($user->update()->toArray());
+});
+
+Route::delete('/users/{id}/delete', function (Request $request) {
+    $user = User::find($request->routeParameters('id'));
+
+    return json($user->delete()->toArray());
 });
 
 $app->run();
