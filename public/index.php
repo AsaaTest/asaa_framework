@@ -2,6 +2,7 @@
 // Importa las clases necesarias para su uso en el script.
 
 use Asaa\App;
+use Asaa\Database\DB;
 use Asaa\Http\Request;
 use Asaa\Http\Response;
 use Asaa\Routing\Route;
@@ -70,4 +71,11 @@ Route::post('/form', function (Request $request) {
     ]));
 }); 
 
+Route::post('/user', function (Request $request){
+    DB::statement("INSERT INTO users (name, email) VALUES (?,?)", [$request->data('name'), $request->data('email')]);
+    return json(["message" => "Ok"]);
+});
+Route::get('/users', function (Request $request){
+    return json(DB::statement("SELECT * FROM users"));
+});
 $app->run();

@@ -8,6 +8,11 @@ use Asaa\Session\SessionStorage;
 
 class SessionTest extends TestCase
 {
+    /**
+     * mock
+     *
+     * @return SessionStorage
+     */
     private function createMockSessionStorage()
     {
         $mock = $this->getMockBuilder(SessionStorage::class)->getMock();

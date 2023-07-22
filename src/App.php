@@ -2,6 +2,8 @@
 
 namespace Asaa;
 
+use Asaa\Database\Drivers\DatabaseDriver;
+use Asaa\Database\Drivers\PdoDriver;
 use Throwable;
 use Asaa\View\View;
 use Asaa\Http\Request;
@@ -46,6 +48,8 @@ class App
 
     public Session $session;
 
+    public DatabaseDriver $database;
+
 
     /**
      * Método estático para inicializar y configurar la aplicación.
@@ -70,6 +74,10 @@ class App
 
         $app->session = new Session(new PhpNativeSessionStorage());
 
+        $app->database = new PdoDriver();
+
+        $app->database->connect('mysql', 'localhost', 3306, 'proyecto_framework', 'root', '');
+
         Rule::loadDefaultRules();
 
         // Retorna la instancia de la aplicación configurada.
@@ -87,6 +95,8 @@ class App
     {
         $this->prepareNextRequest();
         $this->server->sendResponse($response);
+        $this->database->close();
+        exit();
     }
 
     /**
