@@ -88,6 +88,9 @@ abstract class Model
         $databaseColums = implode(",", array_keys($this->attributes));
         $bind = implode(",", array_fill(0, count($this->attributes), "?"));
         self::$driver->statement("INSERT INTO $this->table ($databaseColums) VALUES ($bind)", array_values($this->attributes));
+
+        $this->{$this->primaryKey} = self::$driver->lastInsertId();
+
         return $this;
     }
 

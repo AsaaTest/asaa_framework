@@ -15,6 +15,11 @@ class PdoDriver implements DatabaseDriver
 
     }
 
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
+    }
+
     public function close()
     {
         $this->pdo = null;

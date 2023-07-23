@@ -54,20 +54,19 @@ class Router
         // Obtiene la acción asociada a la ruta resuelta.
         $action = $route->action();
 
-        // Verifica si la ruta tiene middlewares configurados.
-        if ($route->hasMiddlewares()) {
-            // Si hay middlewares, ejecuta la función "runMiddlewares()" para procesarlos.
-            return $this->runMiddlewares($request, $route->middlewares(), $action);
+        if(is_array($action)) {
+            $controller = new $action[0]();
+            $action[0] = $controller;
         }
 
-        // Si no hay middlewares, ejecuta la acción principal directamente y devuelve la respuesta generada por ella.
-        return $action($request);
+        return $this->runMiddlewares($request, $route->middlewares(), fn () => call_user_func($action, $request));
+
     }
 
     protected function runMiddlewares(Request $request, array $middlewares, $target): Response
     {
         if (count($middlewares) == 0) {
-            return $target($request);
+            return $target();
         }
         return $middlewares[0]->handle(
             $request,
@@ -75,15 +74,8 @@ class Router
         );
     }
 
-    /**
-     * Registra una ruta con su acción correspondiente para un método HTTP específico.
-     *
-     * @param string $method El método HTTP de la ruta (GET, POST, PUT, PATCH, DELETE).
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    protected function registerRoute(string $method, string $uri, Closure $action): Route
+
+    protected function registerRoute(string $method, string $uri, Closure|array $action): Route
     {
         $route = new Route($uri, $action);
         // Crea un nuevo objeto "Route" con la URI y la acción proporcionadas y lo agrega al array de rutas.
@@ -91,62 +83,31 @@ class Router
         return $route;
     }
 
-    /**
-     * Registra una nueva ruta con su acción correspondiente para el método GET.
-     *
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    public function get(string $uri, Closure $action): Route
+
+    public function get(string $uri, Closure|array $action): Route
     {
         return $this->registerRoute('GET', $uri, $action);
     }
 
-    /**
-     * Registra una nueva ruta con su acción correspondiente para el método POST.
-     *
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    public function post(string $uri, Closure $action): Route
+
+    public function post(string $uri, Closure|array $action): Route
     {
         return $this->registerRoute('POST', $uri, $action);
     }
 
-    /**
-     * Registra una nueva ruta con su acción correspondiente para el método PUT.
-     *
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    public function put(string $uri, Closure $action): Route
+
+    public function put(string $uri, Closure|array $action): Route
     {
         return $this->registerRoute('PUT', $uri, $action);
     }
 
-    /**
-     * Registra una nueva ruta con su acción correspondiente para el método PATCH.
-     *
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    public function patch(string $uri, Closure $action): Route
+
+    public function patch(string $uri, Closure|array $action): Route
     {
         return $this->registerRoute('PATCH', $uri, $action);
     }
 
-    /**
-     * Registra una nueva ruta con su acción correspondiente para el método DELETE.
-     *
-     * @param string $uri La URI de la ruta.
-     * @param Closure $action La acción a ejecutar cuando la ruta coincida.
-     * @return Route
-     */
-    public function delete(string $uri, Closure $action): Route
+    public function delete(string $uri, Closure|array $action): Route
     {
         return $this->registerRoute('DELETE', $uri, $action);
     }

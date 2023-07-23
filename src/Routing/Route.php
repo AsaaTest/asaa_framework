@@ -5,7 +5,7 @@ namespace Asaa\Routing;
 class Route
 {
     protected string $uri; // La URI de la ruta.
-    protected \Closure $action; // La acción asociada a la ruta.
+    protected \Closure|array $action; // La acción asociada a la ruta.
     protected string $regex; // Expresión regular generada a partir de la URI para hacer coincidencias.
     protected array $parameters; // Lista de parámetros extraídos de la URI.
     protected array $middlewares = [];
@@ -16,7 +16,7 @@ class Route
      * @param string $uri La URI de la ruta.
      * @param \Closure $action La acción asociada a la ruta.
      */
-    public function __construct(string $uri, \Closure $action)
+    public function __construct(string $uri, \Closure|array $action)
     {
         $this->uri = $uri;
         $this->action = $action;
@@ -45,7 +45,7 @@ class Route
      *
      * @return \Closure La acción asociada a la ruta.
      */
-    public function action(): \Closure
+    public function action(): \Closure|array
     {
         return $this->action;
     }
@@ -112,40 +112,28 @@ class Route
         }
     }
 
-    /**
-     * Crea una nueva ruta para solicitudes HTTP GET y la agrega al enrutador.
-     *
-     * @param string $uri La URI de la ruta a crear.
-     * @param \Closure $action La acción o función que se ejecutará cuando se haga una solicitud a esta ruta.
-     * @return Route La instancia de la clase Route creada y agregada al enrutador.
-     */
-    public static function get(string $uri, \Closure $action): Route
+
+    public static function get(string $uri, \Closure|array $action): Route
     {
         // Se utiliza el contenedor de dependencias (Container) para resolver la instancia de la clase App.
         // Luego, se accede al enrutador (router) de la instancia de la clase App y se agrega la ruta HTTP GET.
         return app()->router->get($uri, $action);
     }
 
-    /**
-     * Crea una nueva ruta para solicitudes HTTP GET y la agrega al enrutador.
-     *
-     * @param string $uri La URI de la ruta a crear.
-     * @param \Closure $action La acción o función que se ejecutará cuando se haga una solicitud a esta ruta.
-     * @return Route La instancia de la clase Route creada y agregada al enrutador.
-     */
-    public static function post(string $uri, \Closure $action): Route
+
+    public static function post(string $uri, \Closure|array $action): Route
     {
         // Se utiliza el contenedor de dependencias (Container) para resolver la instancia de la clase App.
         // Luego, se accede al enrutador (router) de la instancia de la clase App y se agrega la ruta HTTP GET.
         return app()->router->post($uri, $action);
     }
 
-    public static function put(string $uri, \Closure $action): Route
+    public static function put(string $uri, \Closure|array $action): Route
     {
         return app()->router->put($uri, $action);
     }
 
-    public static function delete(string $uri, \Closure $action): Route
+    public static function delete(string $uri, \Closure|array $action): Route
     {
         return app()->router->delete($uri, $action);
     }
