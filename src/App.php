@@ -5,6 +5,7 @@ namespace Asaa;
 use Throwable;
 use Asaa\View\View;
 use Asaa\Http\Request;
+use Asaa\Config\Config;
 use Asaa\Http\Response;
 use Asaa\Server\Server;
 use Asaa\Database\Model;
@@ -18,12 +19,15 @@ use Asaa\Http\HttpNotFoundException;
 use Asaa\Database\Drivers\DatabaseDriver;
 use Asaa\Session\PhpNativeSessionStorage;
 use Asaa\Validation\Exceptions\ValidationException;
+use Dotenv\Dotenv;
 
 /**
  * Clase App que representa la aplicación web.
  */
 class App
 {
+    public static string $root;
+
     /**
     * Instancia del enrutador (Router) de la aplicación.
     *
@@ -57,8 +61,11 @@ class App
      *
      * @return App La instancia de la aplicación configurada.
      */
-    public static function bootstrap(): App
+    public static function bootstrap(string $root): App
     {
+        self::$root = $root;
+        Dotenv::createImmutable($root)->load();
+        Config::load("$root/config");
         // Obtiene o crea una instancia única de la clase App utilizando el contenedor de dependencias (Container).
         $app = singleton(self::class);
 

@@ -14,7 +14,7 @@ use Asaa\Validation\Rules\Required;
 // Incluye el archivo "vendor/autoload.php" para cargar las clases definidas por Composer (como el enrutador y otras dependencias).
 require_once "../vendor/autoload.php";
 
-$app = App::bootstrap();
+$app = App::bootstrap(__DIR__ . "/..");
 
 Route::get('/test/{param}', function (Request $request) {
     return json($request->routeParameters());
@@ -111,6 +111,10 @@ Route::delete('/users/{id}/delete', function (Request $request) {
     $user = User::find($request->routeParameters('id'));
 
     return json($user->delete()->toArray());
+});
+
+Route::get('/dbhost', function (Request $request){
+    return Response::text(config('database.port'));
 });
 
 $app->run();
