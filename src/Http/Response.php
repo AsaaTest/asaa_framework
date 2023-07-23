@@ -170,7 +170,7 @@ class Response
 
     public static function view(string $viewName, array $params = [], $layout = null): self
     {
-        $content = app()->view->render($viewName, $params, $layout);
+        $content = app(View::class)->render($viewName, $params, $layout);
         return (new self())
             ->setContentType("text/html")
             ->setContent($content);

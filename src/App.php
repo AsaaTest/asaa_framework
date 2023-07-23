@@ -3,7 +3,6 @@
 namespace Asaa;
 
 use Throwable;
-use Asaa\View\View;
 use Asaa\Http\Request;
 use Asaa\Config\Config;
 use Asaa\Http\Response;
@@ -11,13 +10,9 @@ use Asaa\Server\Server;
 use Asaa\Database\Model;
 use Asaa\Routing\Router;
 use Asaa\Session\Session;
-use Asaa\Validation\Rule;
-use Asaa\View\AsaaEngine;
-use Asaa\Server\PhpNativeServer;
-use Asaa\Database\Drivers\PdoDriver;
 use Asaa\Http\HttpNotFoundException;
 use Asaa\Database\Drivers\DatabaseDriver;
-use Asaa\Session\PhpNativeSessionStorage;
+use Asaa\Session\SessionStorage;
 use Asaa\Validation\Exceptions\ValidationException;
 use Dotenv\Dotenv;
 
@@ -28,70 +23,73 @@ class App
 {
     public static string $root;
 
-    /**
-    * Instancia del enrutador (Router) de la aplicación.
-    *
-    * @var Router
-    */
     public Router $router;
 
-    /**
-     * Instancia de la solicitud HTTP actual (Request).
-     *
-     * @var Request
-     */
     public Request $request;
 
-    /**
-     * Instancia del servidor HTTP (Server) utilizado en la aplicación.
-     *
-     * @var Server
-     */
     public Server $server;
-
-    public View $view;
 
     public Session $session;
 
     public DatabaseDriver $database;
 
-
-    /**
-     * Método estático para inicializar y configurar la aplicación.
-     *
-     * @return App La instancia de la aplicación configurada.
-     */
     public static function bootstrap(string $root): App
     {
         self::$root = $root;
-        Dotenv::createImmutable($root)->load();
-        Config::load("$root/config");
-        // Obtiene o crea una instancia única de la clase App utilizando el contenedor de dependencias (Container).
+
         $app = singleton(self::class);
 
-        // Crea una nueva instancia del enrutador (Router) y la asigna a la propiedad $router de la aplicación.
-        $app->router = new Router();
+        return $app
+                ->loadConfig()
+                ->runServiceProviders('boot')
+                ->setHttpHandles()
+                ->setUpDatabaseConnection()
+                ->runServiceProviders('runtime');
 
-        // Crea una nueva instancia del servidor HTTP PhpNativeServer y la asigna a la propiedad $server de la aplicación.
-        $app->server = new PhpNativeServer();
-
-        // Obtiene la solicitud HTTP actual utilizando el servidor y la asigna a la propiedad $request de la aplicación.
-        $app->request = $app->server->getRequest();
-
-        $app->view = new AsaaEngine(__DIR__."/../views");
-
-        $app->session = new Session(new PhpNativeSessionStorage());
-
-        $app->database = singleton(DatabaseDriver::class, PdoDriver::class);
-
-        $app->database->connect('mysql', 'localhost', 3306, 'proyecto_framework', 'root', '');
-
-        Model::setDatabaseDriver($app->database);
-
-        Rule::loadDefaultRules();
-
-        // Retorna la instancia de la aplicación configurada.
         return $app;
+    }
+
+    protected function loadConfig(): self
+    {
+        Dotenv::createImmutable(self::$root)->load();
+        Config::load(self::$root. "/config");
+        return $this;
+    }
+
+    protected function runServiceProviders(string $type): self
+    {
+        foreach(config("providers.$type", []) as $provider) {
+            $provider = new $provider();
+            $provider->registerServices();
+        }
+
+        return $this;
+    }
+
+    protected function setHttpHandles(): self
+    {
+        $this->router = singleton(Router::class);
+        $this->server = app(Server::class);
+        $this->request = $this->server->getRequest();
+        $this->session = singleton(Session::class, fn () => new Session(app(SessionStorage::class)));
+
+        return $this;
+    }
+
+    protected function setUpDatabaseConnection(): self
+    {
+        $this->database = app(DatabaseDriver::class);
+        $this->database->connect(
+            config("database.connection"),
+            config("database.host"),
+            config("database.port"),
+            config("database.database"),
+            config("database.username"),
+            config("database.password")
+        );
+        Model::setDatabaseDriver($this->database);
+
+        return $this;
     }
 
     public function prepareNextRequest()
@@ -109,11 +107,7 @@ class App
         exit();
     }
 
-    /**
-    * Método para ejecutar la aplicación web.
-    *
-    * @return void
-    */
+
     public function run()
     {
         try {
