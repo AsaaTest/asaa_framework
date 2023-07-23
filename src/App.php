@@ -75,7 +75,7 @@ class App
 
         $app->session = new Session(new PhpNativeSessionStorage());
 
-        $app->database = new PdoDriver();
+        $app->database = singleton(DatabaseDriver::class, PdoDriver::class);
 
         $app->database->connect('mysql', 'localhost', 3306, 'proyecto_framework', 'root', '');
 

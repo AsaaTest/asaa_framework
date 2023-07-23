@@ -23,13 +23,17 @@ class Container
      * @param string $class El nombre de la clase a resolver como singleton.
      * @return object|null Una instancia de la clase si existe o null si no existe.
      */
-    public static function singleton(string $class)
+    public static function singleton(string $class, string|callable|null $build = null)
     {
         // Verifica si la instancia de la clase ya existe en el arreglo $instances.
         if (!array_key_exists($class, self::$instances)) {
             // Si no existe, crea una nueva instancia de la clase utilizando la reflexión de PHP.
             // La instancia de la clase se almacena en el arreglo $instances para futuras referencias.
-            self::$instances[$class] = new $class();
+            match (true) {
+                is_null($build) => self::$instances[$class] = new $class(),
+                is_string($build) => self::$instances[$class] = new $build(),
+                is_callable($build) => self::$instances[$class] = $build(),
+            };
         }
 
         // Retorna la instancia de la clase.

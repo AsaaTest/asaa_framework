@@ -9,7 +9,7 @@ function app($class = App::class)
 }
 
 
-function singleton(string $class)
+function singleton(string $class, string|callable|null $build = null)
 {
-    return Container::singleton($class);
+    return Container::singleton($class, $build);
 }
