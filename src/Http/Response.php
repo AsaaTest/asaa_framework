@@ -2,8 +2,7 @@
 
 namespace Asaa\Http;
 
-use Asaa\App;
-use Asaa\container\Container;
+use Asaa\View\View;
 
 /**
  * Clase Response que representa una respuesta HTTP.

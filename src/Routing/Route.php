@@ -105,6 +105,13 @@ class Route
         return array_combine($this->parameters, array_slice($arguments, 1));
     }
 
+    public static function load(string $routesDirectory)
+    {
+        foreach(glob("$routesDirectory/*.php") as $routes) {
+            require_once $routes;
+        }
+    }
+
     /**
      * Crea una nueva ruta para solicitudes HTTP GET y la agrega al enrutador.
      *
