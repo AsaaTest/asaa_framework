@@ -145,7 +145,7 @@ class RouterTest extends TestCase
         $router = new Router();
         $uri = '/test';
         $expectedResponse = Response::text("test");
-        $router->get($uri, fn ($request) => $expectedResponse)
+        $router->get($uri, fn () => $expectedResponse)
             ->setMiddlewares([$middleware1::class, $middleware2::class]);
 
         $response = $router->resolve($this->createMockRequest($uri, 'GET'));

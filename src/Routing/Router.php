@@ -2,6 +2,7 @@
 
 namespace Asaa\Routing;
 
+use Asaa\Container\DependencyInjection;
 use Closure;
 
 use Asaa\Http\Request;
@@ -59,7 +60,9 @@ class Router
             $action[0] = $controller;
         }
 
-        return $this->runMiddlewares($request, $route->middlewares(), fn () => call_user_func($action, $request));
+        $params = DependencyInjection::resolveParameters($action, $request->routeParameters());
+
+        return $this->runMiddlewares($request, $route->middlewares(), fn () => call_user_func($action, ...$params));
 
     }
 
