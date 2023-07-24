@@ -48,7 +48,7 @@ class Route
     /**
      * Obtiene la acción asociada a la ruta.
      *
-     * @return \Closure La acción asociada a la ruta.
+     * @return \Closure|array La acción asociada a la ruta.
      */
     public function action(): \Closure|array
     {

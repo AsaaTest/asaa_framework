@@ -1,1 +1,12 @@
-<h1>Home <?= $user ?></h1>
+<h1>Welcome</h1>
+
+<?php if(isGuest()){ ?>
+    <div>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    </div>
+<?php } else {?>
+    <div>
+        <a href="/contacts">Contact List</a>
+    </div>
+<?php } ?>

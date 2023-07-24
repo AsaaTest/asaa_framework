@@ -23,8 +23,11 @@ class Migrator
      * @param string $templatesDirectory La ruta del directorio donde se encuentran las plantillas para las migraciones.
      * @param DatabaseDriver $driver El objeto de tipo DatabaseDriver para la conexión de base de datos.
      */
-    public function __construct(private string $migrationsDirectory, private string $templatesDirectory, private DatabaseDriver $driver)
+    public function __construct(private string $migrationsDirectory, private string $templatesDirectory, private DatabaseDriver $driver, private bool $logProgress = true)
     {
+        $this->migrationsDirectory = $migrationsDirectory;
+        $this->templatesDirectory = $templatesDirectory;
+        $this->driver = $driver;
         $this->output = new ConsoleOutput();
     }
 
@@ -35,7 +38,9 @@ class Migrator
      */
     private function log(string $message)
     {
-        $this->output->writeln("<info>$message</info>");
+        if ($this->logProgress) {
+            $this->output->writeln("<info>$message</info>");
+        }
     }
 
     /**

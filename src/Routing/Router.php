@@ -59,18 +59,20 @@ class Router
         // Obtiene la acción asociada a la ruta resuelta.
         $action = $route->action();
 
+        $middlewares = $route->middlewares();
         // Si la acción es un arreglo, significa que es una acción de controlador (controller) con el formato [Controlador, Método].
         // En ese caso, crea una instancia del controlador y reemplaza la acción por el objeto del controlador y el nombre del método.
         if (is_array($action)) {
             $controller = new $action[0]();
             $action[0] = $controller;
+            $middlewares = array_merge($middlewares, $controller->middlewares());
         }
 
         // Resuelve los parámetros de la acción utilizando el contenedor de dependencias (DependencyInjection).
         $params = DependencyInjection::resolveParameters($action, $request->routeParameters());
 
         // Ejecuta los middlewares y la acción principal mediante el método "runMiddlewares()".
-        return $this->runMiddlewares($request, $route->middlewares(), fn () => call_user_func($action, ...$params));
+        return $this->runMiddlewares($request, $middlewares, fn () => call_user_func($action, ...$params));
     }
 
     /**
@@ -78,10 +80,10 @@ class Router
      *
      * @param Request $request La solicitud HTTP entrante.
      * @param array $middlewares Los middlewares asociados a la ruta.
-     * @param \Closure $target La acción principal a ejecutar.
+     * @param  $target La acción principal a ejecutar.
      * @return Response Respuesta generada por la acción principal o por los middlewares.
      */
-    protected function runMiddlewares(Request $request, array $middlewares, \Closure $target): Response
+    protected function runMiddlewares(Request $request, array $middlewares, $target): Response
     {
         if (count($middlewares) == 0) {
             return $target(); // Si no hay middlewares, ejecuta la acción principal.
