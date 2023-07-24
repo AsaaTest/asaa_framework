@@ -3,9 +3,12 @@
 namespace Asaa\Cli;
 
 use Asaa\App;
+use Asaa\Cli\Commands\MakeController;
 use Asaa\Cli\Commands\MakeMigration;
+use Asaa\Cli\Commands\MakeModel;
 use Asaa\Cli\Commands\Migrate;
 use Asaa\Cli\Commands\MigrateRollback;
+use Asaa\Cli\Commands\Serve;
 use Dotenv\Dotenv;
 use Asaa\Config\Config;
 use Asaa\Database\Drivers\DatabaseDriver;
@@ -49,7 +52,10 @@ class Cli
         $cli->addCommands([
             new MakeMigration(),
             new Migrate(),
-            new MigrateRollback()
+            new MigrateRollback(),
+            new MakeController(),
+            new MakeModel(),
+            new Serve()
         ]);
 
         $cli->run();
