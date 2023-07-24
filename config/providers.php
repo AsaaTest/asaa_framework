@@ -29,7 +29,8 @@ return [
      */
     'runtime' => [
         App\Providers\RuleServiceProvider::class,
-        App\Providers\RouteServiceProvider::class
+        App\Providers\RouteServiceProvider::class,
+        App\Providers\AppServiceProvider::class
     ],
 
     /**
