@@ -7,7 +7,8 @@ return [
         \Asaa\Providers\DatabaseDriverServiceProvider::class,
         \Asaa\Providers\ViewServiceProvider::class,
         \Asaa\Providers\AuthenticatorServiceProvider::class,
-        \Asaa\Providers\HasherServiceProvider::class
+        \Asaa\Providers\HasherServiceProvider::class,
+        \Asaa\Providers\FileStorageDriverServiceProvider::class        
     ],
     'runtime' =>[
         App\Providers\RuleServiceProvider::class,

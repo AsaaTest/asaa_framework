@@ -6,6 +6,7 @@ namespace Asaa\Server;
 
 // Importa la clase de solicitud (Request) y respuesta (Response) del espacio de nombres Asaa\Http.
 use Asaa\Http\Request;
+use Asaa\Storage\File;
 use Asaa\Http\Response;
 
 /**
@@ -14,6 +15,22 @@ use Asaa\Http\Response;
  */
 class PhpNativeServer implements Server
 {
+    protected function uploadedFiles(): array
+    {
+        $files = [];
+        foreach ($_FILES as $key => $file) {
+            if (!empty($file["tmp_name"])) {
+                $files[$key] = new File(
+                    file_get_contents($file["tmp_name"]),
+                    $file["type"],
+                    $file["name"],
+                );
+            }
+        }
+
+        return $files;
+    }
+
     /**
      * Obtiene la solicitud (Request) del cliente.
      *
@@ -25,8 +42,10 @@ class PhpNativeServer implements Server
         return (new Request())
             ->setUri(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH))
             ->setMethod($_SERVER["REQUEST_METHOD"])
+            ->setHeaders(getallheaders())
             ->setPostData($_POST)
-            ->setQueryParameters($_GET);
+            ->setQueryParameters($_GET)
+            ->setFiles($this->uploadedFiles());
     }
 
     /**

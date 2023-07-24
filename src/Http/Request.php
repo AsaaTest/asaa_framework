@@ -4,6 +4,7 @@
 
 namespace Asaa\Http;
 
+use Asaa\Storage\File;
 use Asaa\Routing\Route;
 use Asaa\Validation\Validator;
 
@@ -20,6 +21,7 @@ class Request
     protected array $data; // Datos enviados en la solicitud (para solicitudes POST).
     protected array $query; // Parámetros de la consulta (query parameters).
     protected array $headers = []; // Encabezados de la solicitud.
+    protected array $files = [];
 
     /**
      * Obtiene la URI de la solicitud.
@@ -114,6 +116,29 @@ class Request
             $this->headers[strtolower($header)] = $value;
         }
 
+        return $this;
+    }
+
+    /**
+     * Get file from request.
+     *
+     * @param string $name
+     * @return File|null
+     */
+    public function file(string $name): ?File
+    {
+        return $this->files[$name] ?? null;
+    }
+
+    /**
+     * Set uploaded files.
+     *
+     * @param array<string,
+     * @return self
+     */
+    public function setFiles(array $files): self
+    {
+        $this->files = $files;
         return $this;
     }
 
