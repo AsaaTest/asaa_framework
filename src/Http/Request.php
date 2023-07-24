@@ -1,7 +1,5 @@
 <?php
 
-// Define el espacio de nombres para la clase Request.
-
 namespace Asaa\Http;
 
 use Asaa\Storage\File;
@@ -14,13 +12,39 @@ use Asaa\Validation\Validator;
  */
 class Request
 {
-    // Propiedades de la clase Request.
-    protected string $uri; // La URI de la solicitud.
-    protected Route $route; // Ruta coincidente con la URI.
-    protected string $method; // Método HTTP utilizado para esta solicitud.
-    protected array $data; // Datos enviados en la solicitud (para solicitudes POST).
-    protected array $query; // Parámetros de la consulta (query parameters).
-    protected array $headers = []; // Encabezados de la solicitud.
+    /**
+     * @var string La URI de la solicitud.
+     */
+    protected string $uri;
+
+    /**
+     * @var Route Ruta coincidente con la URI.
+     */
+    protected Route $route;
+
+    /**
+     * @var string Método HTTP utilizado para esta solicitud.
+     */
+    protected string $method;
+
+    /**
+     * @var array Datos enviados en la solicitud (para solicitudes POST).
+     */
+    protected array $data;
+
+    /**
+     * @var array Parámetros de la consulta (query parameters).
+     */
+    protected array $query;
+
+    /**
+     * @var array Encabezados de la solicitud.
+     */
+    protected array $headers = [];
+
+    /**
+     * @var array Archivos subidos en la solicitud.
+     */
     protected array $files = [];
 
     /**
@@ -120,10 +144,10 @@ class Request
     }
 
     /**
-     * Get file from request.
+     * Obtiene un archivo subido desde la solicitud.
      *
-     * @param string $name
-     * @return File|null
+     * @param string $name El nombre del archivo a obtener.
+     * @return File|null El archivo subido o null si no se encuentra en la solicitud.
      */
     public function file(string $name): ?File
     {
@@ -131,9 +155,9 @@ class Request
     }
 
     /**
-     * Set uploaded files.
+     * Establece los archivos subidos en la solicitud.
      *
-     * @param array<string,
+     * @param array<string, File> $files Un arreglo asociativo donde las claves son los nombres de los archivos y los valores son instancias de la clase File.
      * @return self
      */
     public function setFiles(array $files): self
@@ -213,10 +237,16 @@ class Request
         return $parameters[$key] ?? null;
     }
 
+    /**
+     * Valida los datos de la solicitud utilizando reglas de validación.
+     *
+     * @param array $rules Un arreglo asociativo donde las claves son los nombres de los campos y los valores son las reglas de validación.
+     * @param array $messages Un arreglo asociativo donde las claves son los nombres de los campos y los valores son mensajes personalizados de error para cada regla de validación.
+     * @return array Un arreglo asociativo donde las claves son los nombres de los campos y los valores son los mensajes de error para las reglas de validación que fallaron.
+     */
     public function validate(array $rules, array $messages = []): array
     {
         $validator = new Validator($this->data);
-
         return $validator->validate($rules, $messages);
     }
 }

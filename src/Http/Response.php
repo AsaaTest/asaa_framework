@@ -10,9 +10,20 @@ use Asaa\View\View;
  */
 class Response
 {
-    protected int $status = 200; // Código de estado HTTP predeterminado.
-    protected array $headers = []; // Encabezados de la respuesta.
-    protected ?string $content = null; // Contenido de la respuesta (puede ser nulo).
+    /**
+     * @var int Código de estado HTTP predeterminado.
+     */
+    protected int $status = 200;
+
+    /**
+     * @var array Encabezados de la respuesta.
+     */
+    protected array $headers = [];
+
+    /**
+     * @var string|null Contenido de la respuesta (puede ser nulo).
+     */
+    protected ?string $content = null;
 
     /**
      * Obtiene el código de estado HTTP de la respuesta.
@@ -103,7 +114,7 @@ class Response
      * @param string $content Contenido a establecer en la respuesta.
      * @return self
      */
-    public function setcontent(string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
@@ -138,7 +149,7 @@ class Response
     {
         return (new self())
             ->setContentType("application/json")
-            ->setcontent(json_encode($data));
+            ->setContent(json_encode($data));
     }
 
     /**
@@ -151,7 +162,7 @@ class Response
     {
         return (new self())
             ->setContentType("text/plain")
-            ->setcontent($text);
+            ->setContent($text);
     }
 
     /**
@@ -167,7 +178,15 @@ class Response
             ->setHeader("Location", $uri);
     }
 
-    public static function view(string $viewName, array $params = [], $layout = null): self
+    /**
+     * Crea una nueva instancia de la clase Response con contenido de una vista renderizada.
+     *
+     * @param string $viewName Nombre de la vista a renderizar.
+     * @param array $params Parámetros para pasar a la vista.
+     * @param string|null $layout Nombre del layout que envuelve la vista (opcional).
+     * @return self Instancia de la clase Response con contenido de una vista renderizada.
+     */
+    public static function view(string $viewName, array $params = [], ?string $layout = null): self
     {
         $content = app(View::class)->render($viewName, $params, $layout);
         return (new self())
@@ -175,6 +194,13 @@ class Response
             ->setContent($content);
     }
 
+    /**
+     * Agrega mensajes de error y datos anteriores a la sesión flash y establece el código de estado de la respuesta.
+     *
+     * @param array $errors Mensajes de error a agregar a la sesión flash.
+     * @param int $status Código de estado HTTP de la respuesta.
+     * @return self Instancia de la clase Response con los mensajes de error y datos anteriores en la sesión flash.
+     */
     public function withErrors(array $errors, int $status = 400): self
     {
         $this->setStatus($status);

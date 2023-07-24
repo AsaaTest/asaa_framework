@@ -4,24 +4,35 @@ namespace Asaa\Validation;
 
 use Asaa\Validation\Exceptions\ValidationException;
 
+/**
+ * Clase Validator
+ *
+ * se encarga de validar un conjunto de datos proporcionados contra un conjunto de reglas de validación definidas previamente.
+ * Permite especificar reglas de validación para cada campo de los datos y, en caso de que algún campo no cumpla con las reglas establecidas, se generarán mensajes de error que indican el motivo del fallo.
+ */
 class Validator
 {
     protected array $data;
 
+    /**
+     * Constructor de la clase Validator.
+     *
+     * @param array $data Los datos que se van a validar.
+     */
     public function __construct(array $data)
     {
         $this->data = $data;
     }
 
     /**
- * Valida un conjunto de reglas de validación para los campos proporcionados y retorna un array con los datos validados.
- *
- * @param array $validationRules Un array que contiene las reglas de validación para cada campo.
- * @param array $messages Un array opcional que contiene mensajes personalizados para las reglas de validación.
- *
- * @return array Un array con los datos validados.
- * @throws ValidationException Si se encuentran errores de validación, se lanza una excepción con los errores encontrados.
- */
+     * Valida un conjunto de reglas de validación para los campos proporcionados y retorna un array con los datos validados.
+     *
+     * @param array $validationRules Un array que contiene las reglas de validación para cada campo.
+     * @param array $messages Un array opcional que contiene mensajes personalizados para las reglas de validación.
+     *
+     * @return array Un array con los datos validados.
+     * @throws ValidationException Si se encuentran errores de validación, se lanza una excepción con los errores encontrados.
+     */
     public function validate(array $validationRules, array $messages = []): array
     {
         $validated = []; // Almacenará los datos validados
@@ -71,5 +82,4 @@ class Validator
 
         return $validated; // Devolver los datos validados
     }
-
 }

@@ -3,16 +3,16 @@
 namespace Asaa\Storage\Drivers;
 
 /**
- * File storage driver.
+ * Interfaz FileStorageDriver que define el contrato para los controladores de almacenamiento de archivos.
  */
 interface FileStorageDriver
 {
     /**
-     * Store file.
+     * Almacena un archivo.
      *
-     * @param string $path
-     * @param mixed $content
-     * @return string The URL of the stored file.
+     * @param string $path Ruta del archivo.
+     * @param mixed $content Contenido del archivo a almacenar.
+     * @return string La URL del archivo almacenado.
      */
     public function put(string $path, mixed $content): string;
 }

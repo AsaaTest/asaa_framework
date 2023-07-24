@@ -21,18 +21,44 @@ use Dotenv\Dotenv;
  */
 class App
 {
+    /**
+     * @var string La ruta raíz de la aplicación.
+     */
     public static string $root;
 
+    /**
+     * @var Router El enrutador de la aplicación.
+     */
     public Router $router;
 
+    /**
+     * @var Request La solicitud actual de la aplicación.
+     */
     public Request $request;
 
+    /**
+     * @var Server El servidor web utilizado por la aplicación.
+     */
     public Server $server;
 
+    /**
+     * @var Session El sistema de sesión utilizado por la aplicación.
+     */
     public Session $session;
 
+    /**
+     * @var DatabaseDriver El controlador de base de datos utilizado por la aplicación.
+     */
     public DatabaseDriver $database;
 
+    /**
+     * Método bootstrap
+     *
+     * Inicializa y configura la aplicación.
+     *
+     * @param string $root La ruta raíz de la aplicación.
+     * @return App La instancia de la aplicación configurada.
+     */
     public static function bootstrap(string $root): App
     {
         self::$root = $root;
@@ -49,6 +75,13 @@ class App
         return $app;
     }
 
+    /**
+     * Método loadConfig
+     *
+     * Carga la configuración de la aplicación desde los archivos .env y config.
+     *
+     * @return self La instancia de la aplicación actualizada.
+     */
     protected function loadConfig(): self
     {
         Dotenv::createImmutable(self::$root)->load();
@@ -56,6 +89,14 @@ class App
         return $this;
     }
 
+    /**
+     * Método runServiceProviders
+     *
+     * Ejecuta los service providers registrados en la configuración de la aplicación.
+     *
+     * @param string $type El tipo de service providers a ejecutar (boot o runtime).
+     * @return self La instancia de la aplicación actualizada.
+     */
     protected function runServiceProviders(string $type): self
     {
         foreach(config("providers.$type", []) as $provider) {
@@ -66,6 +107,13 @@ class App
         return $this;
     }
 
+    /**
+     * Método setHttpHandles
+     *
+     * Configura los manejadores HTTP necesarios para la aplicación.
+     *
+     * @return self La instancia de la aplicación actualizada.
+     */
     protected function setHttpHandles(): self
     {
         $this->router = singleton(Router::class);
@@ -76,6 +124,13 @@ class App
         return $this;
     }
 
+    /**
+     * Método setUpDatabaseConnection
+     *
+     * Configura y establece la conexión a la base de datos utilizando el controlador de base de datos.
+     *
+     * @return self La instancia de la aplicación actualizada.
+     */
     protected function setUpDatabaseConnection(): self
     {
         $this->database = app(DatabaseDriver::class);
@@ -92,6 +147,11 @@ class App
         return $this;
     }
 
+    /**
+     * Método prepareNextRequest
+     *
+     * Prepara la próxima solicitud para almacenar la URL actual en la sesión si es una solicitud GET.
+     */
     public function prepareNextRequest()
     {
         if($this->request->method() == 'GET') {
@@ -99,6 +159,13 @@ class App
         }
     }
 
+    /**
+     * Método terminate
+     *
+     * Finaliza la aplicación enviando la respuesta al cliente y cerrando la conexión a la base de datos.
+     *
+     * @param Response $response La respuesta que se enviará al cliente.
+     */
     public function terminate(Response $response)
     {
         $this->prepareNextRequest();
@@ -107,13 +174,18 @@ class App
         exit();
     }
 
-
+    /**
+     * Método run
+     *
+     * Ejecuta la aplicación, resuelve la ruta de la solicitud actual y termina la aplicación enviando la respuesta al cliente.
+     * Maneja excepciones y errores comunes, y envía una respuesta adecuada al cliente en caso de fallo.
+     */
     public function run()
     {
         try {
             $this->terminate($this->router->resolve($this->request));
         } catch (HttpNotFoundException $e) {
-            $this->abort(Response::text("Not found")->setStatus(404));
+            $this->abort(Response::text("No encontrado")->setStatus(404));
         } catch (ValidationException $e) {
             $this->abort(back()->withErrors($e->errors(), 422));
         } catch(Throwable $e) {
@@ -126,6 +198,13 @@ class App
         }
     }
 
+    /**
+     * Método abort
+     *
+     * Termina la aplicación enviando una respuesta de error al cliente.
+     *
+     * @param Response $response La respuesta de error que se enviará al cliente.
+     */
     public function abort(Response $response)
     {
         $this->terminate($response);
