@@ -68,7 +68,7 @@ class App
         return $app
                 ->loadConfig()
                 ->runServiceProviders('boot')
-                ->setHttpHandles()
+                ->setHttpHandlers()
                 ->setUpDatabaseConnection()
                 ->runServiceProviders('runtime');
 
@@ -108,13 +108,13 @@ class App
     }
 
     /**
-     * Método setHttpHandles
+     * Método setHttpHandlers
      *
      * Configura los manejadores HTTP necesarios para la aplicación.
      *
      * @return self La instancia de la aplicación actualizada.
      */
-    protected function setHttpHandles(): self
+    protected function setHttpHandlers(): self
     {
         $this->router = singleton(Router::class);
         $this->server = app(Server::class);
@@ -152,7 +152,7 @@ class App
      *
      * Prepara la próxima solicitud para almacenar la URL actual en la sesión si es una solicitud GET.
      */
-    public function prepareNextRequest()
+    protected function prepareNextRequest()
     {
         if($this->request->method() == 'GET') {
             $this->session->set('_previous', $this->request->uri());
@@ -166,7 +166,7 @@ class App
      *
      * @param Response $response La respuesta que se enviará al cliente.
      */
-    public function terminate(Response $response)
+    protected function terminate(Response $response)
     {
         $this->prepareNextRequest();
         $this->server->sendResponse($response);
