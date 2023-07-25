@@ -4,6 +4,7 @@ namespace Asaa\Cli\Commands;
 
 use Asaa\App;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,10 +24,13 @@ class MakeController extends Command
      * Configura los argumentos del comando.
      *
      * Define el argumento "name" como requerido para especificar el nombre del nuevo controlador a crear.
+     * Define la opcion "crud" (-crud) como opcional para generar los metodos basicos para un crud
      */
     protected function configure()
     {
-        $this->addArgument("name", InputArgument::REQUIRED, "Controller name");
+        $this->addArgument("name", InputArgument::REQUIRED, "Controller name")
+            ->addOption("crud", "crud", InputOption::VALUE_OPTIONAL, "Also crea a crud methods in controller", false);
+
     }
 
     /**
@@ -39,10 +43,16 @@ class MakeController extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument("name");
+        $crud = $input->getOption("crud");
 
         // Lee la plantilla del controlador y reemplaza el nombre del controlador.
         $template = file_get_contents(resourcesDirectory() . "/templates/controller.php");
         $template = str_replace("ControllerName", $name, $template);
+        // Si se especificó la opción "crud", crea los metodos crud en el controlador
+        if ($crud !== false) {
+            $template = file_get_contents(resourcesDirectory() . "/templates/controllerResource.php");
+            $template = str_replace("ControllerName", $name, $template);
+        }
 
         // Crea el archivo del controlador en la carpeta "app/Controllers" de la aplicación.
         file_put_contents(App::$root . "/app/Controllers/$name.php", $template);
