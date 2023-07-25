@@ -7,4 +7,6 @@
     </div>
 <?php } else {?>
         You are logged in!
+        
+        <a href="/user/<?= auth()->id ?>">Ir</a>
 <?php } ?>

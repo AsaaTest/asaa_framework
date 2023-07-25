@@ -9,6 +9,7 @@ class User extends Authenticatable
     protected array $hidden = ['password'];
 
     protected array $fillable = [
+        'id',
         'name',
         'email',
         'password'

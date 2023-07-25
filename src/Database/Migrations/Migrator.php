@@ -128,7 +128,7 @@ class Migrator
 
         if (preg_match("/create_.*_table/", $migrationName)) {
             $table = preg_replace_callback("/create_(.*)_table/", fn ($match) => $match[1], $migrationName);
-            $template = str_replace('$UP', "CREATE TABLE $table (id INT AUTO_INCREMENT PRIMARY KEY)", $template);
+            $template = str_replace('$UP', "CREATE TABLE $table (\n\t\t\t\t\tid INT AUTO_INCREMENT PRIMARY KEY\n\t\t\t\t\t)", $template);
             $template = str_replace('$DOWN', "DROP TABLE $table", $template);
         } elseif (preg_match("/.*(from|to)_(.*)_table/", $migrationName)) {
             $table = preg_replace_callback("/.*(from|to)_(.*)_table/", fn ($match) => $match[2], $migrationName);

@@ -92,7 +92,7 @@ class PhpNativeServer implements Server
         foreach ($response->headers() as $header => $value) {
             header("$header: $value");
         }
-
+        ob_clean();
         // Imprime el contenido de la respuesta.
         print($response->content());
     }

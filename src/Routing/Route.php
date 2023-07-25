@@ -28,7 +28,7 @@ class Route
 
         // Genera una expresión regular a partir de la URI que reemplaza los segmentos
         // de la forma {param} por ([a-zA-Z0-9]+), lo que permite hacer coincidencias.
-        $this->regex = preg_replace('/\{([a-zA-Z]+)\}/', '([a-zA-Z0-9]+)', $uri);
+        $this->regex = preg_replace('/\{([a-zA-Z]+)\}/', '([a-zA-Z0-9-]+)', $uri);
 
         // Extrae los nombres de los parámetros de la URI y los almacena en la propiedad $parameters.
         preg_match_all('/\{([a-zA-Z]+)\}/', $uri, $parameters);

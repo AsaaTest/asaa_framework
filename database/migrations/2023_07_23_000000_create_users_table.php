@@ -9,7 +9,7 @@ return new class() implements Migration {
     public function up() {
         // Utiliza el objeto de la clase DB para ejecutar una sentencia SQL para crear la tabla "users"
         DB::statement('CREATE TABLE users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
             name VARCHAR(256),
             email VARCHAR(256),
             password VARCHAR(256),
