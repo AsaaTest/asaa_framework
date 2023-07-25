@@ -10,5 +10,4 @@ Auth::routes();
 
 Route::get('/', fn () => redirect('/home'));
 Route::get('/home', [HomeController::class, 'show']);
-Route::get('/user/{user}', [HomeController::class, 'view']);
 
