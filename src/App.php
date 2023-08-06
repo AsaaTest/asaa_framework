@@ -185,7 +185,7 @@ class App
         try {
             $this->terminate($this->router->resolve($this->request));
         } catch (HttpNotFoundException $e) {
-            $this->abort(Response::text("No encontrado")->setStatus(404));
+            $this->abort(Response::text($e->getMessage())->setStatus(404));
         } catch (ValidationException $e) {
             $this->abort(back()->withErrors($e->errors(), 422));
         } catch(Throwable $e) {

@@ -38,7 +38,7 @@ class Router
         }
 
         // Si no se encuentra ninguna ruta coincidente, lanzar una excepción "HttpNotFoundException".
-        throw new HttpNotFoundException();
+        throw new HttpNotFoundException("Route" . $request->uri(). " not found");
     }
 
     /**

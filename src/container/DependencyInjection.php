@@ -51,7 +51,7 @@ class DependencyInjection
 
                 // Si el modelo no se encuentra, lanza una excepción HttpNotFoundException.
                 if (is_null($resolved)) {
-                    throw new HttpNotFoundException();
+                    throw new HttpNotFoundException($modelId .' Not found in '. $param->getType()->getName());
                 }
             } elseif ($param->getType()->isBuiltin()) {
                 // Si el parámetro es de tipo primitivo (built-in), obtiene el valor directamente desde los parámetros de la URL.

@@ -4,11 +4,13 @@ use Asaa\Database\DB;
 use Asaa\Database\Migrations\Migration;
 
 return new class() implements Migration {
-    public function up() {
+    public function up()
+    {
         DB::statement('$UP');
     }
 
-    public function down(){
+    public function down()
+    {
         DB::statement('$DOWN');
     }
 };
