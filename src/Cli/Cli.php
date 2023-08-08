@@ -6,8 +6,10 @@ use Asaa\App;
 use Asaa\Cli\Commands\MakeController;
 use Asaa\Cli\Commands\MakeMigration;
 use Asaa\Cli\Commands\MakeModel;
+use Asaa\Cli\Commands\MakeModule;
 use Asaa\Cli\Commands\Migrate;
 use Asaa\Cli\Commands\MigrateRollback;
+use Asaa\Cli\Commands\ModuleMakeController;
 use Asaa\Cli\Commands\Serve;
 use Dotenv\Dotenv;
 use Asaa\Config\Config;
@@ -84,7 +86,9 @@ class Cli
             new MigrateRollback(),
             new MakeController(),
             new MakeModel(),
-            new Serve()
+            new Serve(),
+            new ModuleMakeController(),
+            new MakeModule()
         ]);
 
         // Ejecuta la aplicación CLI.

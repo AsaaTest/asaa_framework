@@ -100,8 +100,15 @@ class App
     protected function runServiceProviders(string $type): self
     {
         foreach(config("providers.$type", []) as $provider) {
-            $provider = new $provider();
-            $provider->registerServices();
+            if(is_array($provider)) {
+                foreach($provider as $prov) {
+                    $provider = new $prov();
+                    $provider->registerServices();
+                }
+            } else {
+                $provider = new $provider();
+                $provider->registerServices();
+            }
         }
 
         return $this;

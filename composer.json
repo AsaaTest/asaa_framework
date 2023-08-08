@@ -4,7 +4,8 @@
     "autoload": {
         "psr-4": {
             "Asaa\\": "src/",
-            "App\\": "app/"
+            "App\\": "app/",
+            "Modules\\": "modules/"
         },
         "files": [
             "src/Helpers/app.php",

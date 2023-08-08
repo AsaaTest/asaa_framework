@@ -2,6 +2,8 @@
 
 namespace Asaa\View;
 
+use Asaa\Http\HttpNotFoundException;
+
 /**
  * Clase AsaaEngine
  *
@@ -69,7 +71,13 @@ class AsaaEngine implements View
     protected function renderView(string $view, array $params = []): string
     {
         // Utiliza la función phpFileOutput para obtener el contenido de la vista a partir del archivo PHP correspondiente.
-        return $this->phpFileOutput("{$this->viewsDirectory}/{$view}.php", $params);
+        $moduleViewPath = "{$this->viewsDirectory}/../..//modules/{$view}.php";
+        if (file_exists($moduleViewPath)) {
+            return $this->phpFileOutput($moduleViewPath, $params);
+        }
+        // Si no se encuentra en el directorio del módulo, busca en el directorio predeterminado (resources/views)
+        $defaultViewPath = "{$this->viewsDirectory}/{$view}.php";
+        return $this->phpFileOutput($defaultViewPath, $params);
     }
 
     /**
@@ -100,9 +108,8 @@ class AsaaEngine implements View
     {
         // Verifica si el archivo PHP existe.
         if(!file_exists($phpFile)) {
-            return "Vista $phpFile no encontrada";
+            throw new HttpNotFoundException("Vista $phpFile no encontrada");
         }
-
         // Extrae los parámetros y los convierte en variables locales dentro del archivo PHP.
         foreach($params as $param => $value) {
             $$param = $value;

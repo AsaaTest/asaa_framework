@@ -68,3 +68,30 @@ function resourcesDirectory(): string
 {
     return App::$root . "/resources";
 }
+
+/**
+ * Función para cargar los proveewdores de cada modulo
+ */
+function loadModuleProviders()
+{
+    $providers = [];
+    // Ruta de modulos
+    $modulesPath = App::$root ."/modules";
+    $moduleFolders = scandir($modulesPath);
+
+    foreach ($moduleFolders as $folder) {
+        if ($folder !== '.' && $folder !== '..' && is_dir($modulesPath . '/' . $folder)) {
+            $providerPath = "Modules\\$folder\\Providers";
+            $providerFiles = scandir($providerPath);
+            foreach ($providerFiles as $providerFile) {
+                if ($providerFile !== '.' && $providerFile !== '..' && is_file($providerPath . '/' . $providerFile)) {
+                    $providerClass = "Modules\\$folder\\Providers\\" . pathinfo($providerFile, PATHINFO_FILENAME);
+                    if (class_exists($providerClass)) {
+                        $providers[] = $providerClass;
+                    }
+                }
+            }
+        }
+    }    
+    return $providers;
+}
